@@ -25,6 +25,9 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
     name: 'S1'
   }
   kind: 'linux'
+  properties: {
+    reserved: true
+  }
 }
 
 resource appService 'Microsoft.Web/sites@2022-09-01' = {
