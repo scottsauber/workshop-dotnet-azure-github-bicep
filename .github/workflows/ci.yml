@@ -1,0 +1,62 @@
+name: Deploy Pipeline
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    name: Build, Test, Upload Artifact
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v1
+
+      - name: Run dotnet test
+        run: |
+          dotnet test -c Release
+
+      - name: Run dotnet publish
+        run: |
+          cd src/WorkshopDemo
+          dotnet publish ./WorkshopDemo.csproj -c Release -o ../../publish
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: dotnet-artifact
+          path: publish/
+
+  dev:
+    needs: build_and_test
+    uses: ./.github/workflows/step-deploy.yml
+    with:
+      env: dev
+      artifact_name: dotnet-artifact
+      location: centralus
+      resource_group_name: rg-workshop-dnazghbicep-dev
+      app_service_name: app-workshop-dnazghbicep-dev
+      app_service_slot_name: app-workshop-dnazghbicep-dev-staging
+    # Note: use GH Environment Secrets if using a Pro/Enterprise version of GH
+    secrets:
+      azure_client_id: ${{ secrets.DEV_AZURE_CLIENT_ID }}
+      azure_subscription_id: ${{ secrets.DEV_AZURE_SUBSCRIPTION_ID }}
+      azure_tenant_id: ${{ secrets.DEV_AZURE_TENANT_ID }}
+
+  prod:
+    needs: dev
+    uses: ./.github/workflows/step-deploy.yml
+    with:
+      env: prod
+      artifact_name: dotnet-artifact
+      location: centralus
+      resource_group_name: rg-workshop-dnazghbicep-prod
+      app_service_name: app-workshop-dnazghbicep-prod
+      app_service_slot_name: app-workshop-dnazghbicep-prod-staging
+    # Note: use GH Environment Secrets if using a Pro/Enterprise version of GH
+    secrets:
+      azure_client_id: ${{ secrets.PROD_AZURE_CLIENT_ID }}
+      azure_subscription_id: ${{ secrets.PROD_AZURE_SUBSCRIPTION_ID }}
+      azure_tenant_id: ${{ secrets.PROD_AZURE_TENANT_ID }}
