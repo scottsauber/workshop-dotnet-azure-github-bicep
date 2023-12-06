@@ -63,6 +63,8 @@ This workshop will highlight the following:
    12. Deployment Slots
 6. We have the same for each env - Dev and Prod
    1. How do we do that without clicking those same settings everywhere... enter Bicep
+7. Show the Version Endpoint
+8. Make some change and deploy it
 
 ### Module 4 - Review Bicep Slides
 
