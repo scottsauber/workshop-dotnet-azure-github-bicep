@@ -25,8 +25,10 @@ jobs:
 
       - name: Run dotnet publish
         run: |
-          cd src/WorkshopDemo
-          dotnet publish ./WorkshopDemo.csproj -c Release -o ../../publish
+          dotnet publish ./src/WorkshopDemo/WorkshopDemo.csproj -c Release -o ./publish
+
+      - name: Update version file with GHA run number and git short SHA
+        run: echo $(date +'%Y%m%d.%H%M').${{github.run_number}}-$(git rev-parse --short HEAD) > publish/version.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
