@@ -71,7 +71,7 @@ jobs:
               --name whatif-${{ github.run_id }} \
               --template-file infrastructure/main.bicep \
               --parameters infrastructure/environments/${{ inputs.env }}.bicepparam \
-              --resource-group ${{ inputs.resource_group_name }}
+              --resource-group ${{ inputs.resource_group_name }} \
               --location ${{ inputs.location }}  > whatif.txt
 
         # Create string output of Whatif
