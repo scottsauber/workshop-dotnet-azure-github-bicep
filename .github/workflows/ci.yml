@@ -5,6 +5,11 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  pull-requests: write
+  contents: read
+
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
