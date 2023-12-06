@@ -40,7 +40,6 @@ jobs:
     with:
       env: dev
       artifact_name: dotnet-artifact
-      location: centralus
       resource_group_name: rg-workshop-dnazghbicep-dev
       app_service_name: app-workshop-dnazghbicep-dev
       app_service_slot_name: app-workshop-dnazghbicep-dev-staging
@@ -56,7 +55,6 @@ jobs:
     with:
       env: prod
       artifact_name: dotnet-artifact
-      location: centralus
       resource_group_name: rg-workshop-dnazghbicep-prod
       app_service_name: app-workshop-dnazghbicep-prod
       app_service_slot_name: app-workshop-dnazghbicep-prod-staging

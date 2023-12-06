@@ -9,9 +9,6 @@ on:
       artifact_name:
         required: true
         type: string
-      location:
-        required: true
-        type: string
       resource_group_name:
         required: true
         type: string
@@ -53,7 +50,6 @@ jobs:
           --template-file infrastructure/main.bicep \
           --parameters infrastructure/environments/${{ inputs.env }}.bicepparam \
           --resource-group ${{ inputs.resource_group_name }} \
-          --location ${{ inputs.location }}
 
       - uses: actions/download-artifact@v3
         with:
