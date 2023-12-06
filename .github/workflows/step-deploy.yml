@@ -46,10 +46,11 @@ jobs:
       - name: Run Bicep
         run: |
           az deployment group create \
-          --name ${{ inputs.env }}-deployment-${{ github.run_number }} \
-          --template-file infrastructure/main.bicep \
-          --parameters infrastructure/environments/${{ inputs.env }}.bicepparam \
-          --resource-group ${{ inputs.resource_group_name }} \
+            --name ${{ inputs.env }}-deployment-${{ github.run_number }} \
+            --template-file infrastructure/main.bicep \
+            --parameters infrastructure/environments/${{ inputs.env }}.bicepparam \
+            --resource-group ${{ inputs.resource_group_name }} \
+            --verbose
 
       - uses: actions/download-artifact@v3
         with:
