@@ -36,7 +36,6 @@ jobs:
   deploy:
     name: Deploy to Azure App Service
     runs-on: ubuntu-latest
-    environment: ${{ inputs.env }}
     steps:
       - uses: actions/checkout@v3
 
