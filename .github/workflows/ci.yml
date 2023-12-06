@@ -42,7 +42,7 @@ jobs:
       artifact_name: dotnet-artifact
       resource_group_name: rg-workshop-dnazghbicep-dev
       app_service_name: app-workshop-dnazghbicep-dev
-      app_service_slot_name: app-workshop-dnazghbicep-dev-staging
+      app_service_slot_name: slot
     # Note: use GH Environment Secrets if using a Pro/Enterprise version of GH
     secrets:
       azure_client_id: ${{ secrets.DEV_AZURE_CLIENT_ID }}
@@ -57,7 +57,7 @@ jobs:
       artifact_name: dotnet-artifact
       resource_group_name: rg-workshop-dnazghbicep-prod
       app_service_name: app-workshop-dnazghbicep-prod
-      app_service_slot_name: app-workshop-dnazghbicep-prod-staging
+      app_service_slot_name: slot
     # Note: use GH Environment Secrets if using a Pro/Enterprise version of GH
     secrets:
       azure_client_id: ${{ secrets.PROD_AZURE_CLIENT_ID }}
