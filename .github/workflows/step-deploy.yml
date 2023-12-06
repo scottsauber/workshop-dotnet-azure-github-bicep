@@ -48,7 +48,7 @@ jobs:
 
       - name: Run Bicep
         run: |
-          az deployment sub create \
+          az deployment group create \
           --name ${{ inputs.env }}-deployment-${{ github.run_number }} \
           --template-file infrastructure/main.bicep \
           --parameters infrastructure/environments/${{ inputs.env }}.bicepparam \

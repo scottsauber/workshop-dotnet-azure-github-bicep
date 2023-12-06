@@ -70,5 +70,3 @@ This workshop will highlight the following:
 
 1. Show parameters with @allowed values
    1. Show creating parameters.bicepparam with wrong value
-
-## Hands On Work
