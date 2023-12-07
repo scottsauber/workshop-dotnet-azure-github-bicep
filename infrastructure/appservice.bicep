@@ -26,7 +26,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: 'asp-${appName}-${environment}'
   location: location
   sku: {
-    name: 'S2'
+    name: 'S1'
   }
   kind: 'linux'
   properties: {
