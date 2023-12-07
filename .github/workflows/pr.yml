@@ -20,7 +20,6 @@ jobs:
     uses: ./.github/workflows/step-bicep-whatif.yml
     with:
       env: dev
-      location: centralus
       resource_group_name: rg-workshop-dnazghbicep-dev
     secrets:
       azure_client_id: ${{ secrets.DEV_AZURE_CLIENT_ID }}

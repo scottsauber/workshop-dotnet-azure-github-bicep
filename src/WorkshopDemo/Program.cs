@@ -1,12 +1,14 @@
 using WorkshopDemo.Core.Common;
+using WorkshopDemo.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddHealthChecks()
+    .AddCheck<WorkshopDemoHealthCheck>(nameof(WorkshopDemoHealthCheck));
 builder.Services.AddSingleton<IFileService, FileService>();
 builder.Services.AddSingleton<IVersionService, VersionService>();
 
@@ -20,6 +22,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapHealthChecks("/api/healthz");
 
 app.MapControllers();
 
