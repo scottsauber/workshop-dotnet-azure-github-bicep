@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkshopDemo", "src\Worksho
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkshopDemo.Core.Tests", "src\WorkshopDemo.Core.Tests\WorkshopDemo.Core.Tests.csproj", "{5AC17687-D9F2-4132-9E03-740EBFEE759F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkshopDemo.Core", "WorkshopDemo.Core\WorkshopDemo.Core.csproj", "{49F64794-EC73-4D3F-8449-A36C9FB7B11D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkshopDemo.Core", "src\WorkshopDemo.Core\WorkshopDemo.Core.csproj", "{49F64794-EC73-4D3F-8449-A36C9FB7B11D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
