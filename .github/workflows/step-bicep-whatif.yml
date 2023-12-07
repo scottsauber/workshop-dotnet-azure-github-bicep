@@ -7,9 +7,6 @@ on:
       env:
         required: true
         type: string
-      location:
-        required: true
-        type: string
       resource_group_name:
         required: true
         type: string
@@ -45,7 +42,7 @@ jobs:
         with:
           inlineScript: az bicep build --file infrastructure/main.bicep
 
-      - name: Bicep Validate Subscription Scope
+      - name: Bicep Validate
         uses: Azure/cli@v1
         with:
           inlineScript: |
@@ -54,7 +51,6 @@ jobs:
               --template-file infrastructure/main.bicep \
               --parameters infrastructure/environments/${{ inputs.env }}.bicepparam \
               --resource-group ${{ inputs.resource_group_name }}
-              --location ${{ inputs.location }}
 
       # Perform a security scan of the bicep code using checkov
       - name: Run Checkov action
@@ -71,8 +67,7 @@ jobs:
               --name whatif-${{ github.run_id }} \
               --template-file infrastructure/main.bicep \
               --parameters infrastructure/environments/${{ inputs.env }}.bicepparam \
-              --resource-group ${{ inputs.resource_group_name }} \
-              --location ${{ inputs.location }}  > whatif.txt
+              --resource-group ${{ inputs.resource_group_name }} > whatif.txt
 
         # Create string output of Whatif
       - name: Create String Output
