@@ -29,14 +29,14 @@ Pre-requisites:
 1. Recommended to use VS Code with the [Bicep extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep) for editing Bicep
 1. Fork this repo
 
-### Module 1 - Review Azure Slides
+## Module 1 - Review Azure Slides
 
 1. What is a Subscription?
 2. What is a Resource Group?
 3. What is Azure App Service?
 4. What is Azure App Service Plan?
 
-### Module 2 - Live Demo of Running Azure App Service
+## Module 2 - Live Demo of Running Azure App Service
 
 1. Lay of the land
    1. Each of you have 2 Resource Groups for Dev + Prod where you are a Contributor
@@ -81,9 +81,9 @@ Pre-requisites:
 7. Show the Version Endpoint
 8. Make some change and deploy it, watch it go through the AzurePing service
 
-### Module 3 - Review Bicep Slides
+## Module 3 - Review Bicep Slides
 
-### Module 4 - Bicep Hands On
+## Module 4 - Bicep Hands On
 
 1. Delete your `.github` folder and your `infrastructure` folder and commit and push that code. This history is here for reference in case you get stuck.
 1. Create a new folder called `infrastructure`
@@ -321,9 +321,9 @@ Pre-requisites:
 
 1. That's it! We now have Bicep ready to be configured... but crap... how do we deploy it?? 👇👇
 
-### Module 5 - GitHub Actions Review Slides
+## Module 5 - GitHub Actions Review Slides
 
-### Module 6 - GitHub Actions Review Slides
+## Module 6 - GitHub Actions Review Slides
 
 1. If it doesn't already exist, create a folder called `.github` and then `workflows` under that folder.
 1. Create 6 new secrets based on the email you received at the beginning of this workshop. These secrets will be used to authenticate to Azure. If this wasn't in place, you wouldn't be able to talk to your Azure account, because Azure doesn't just let anyone in.
