@@ -18,6 +18,7 @@ var appServiceProperties = {
   }
 }
 
+
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: 'asp-${appName}-${environment}'
   location: location
