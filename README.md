@@ -317,6 +317,8 @@ Pre-requisites:
 
    ![Bicep Params](./docs/images/wrong-environment.png)
 
+1. Now make a `prod.bicepparam` similar to your `dev.bicepparam` but with a value of `prod` instead of `dev`.
+
 1. That's it! We now have Bicep ready to be configured... but crap... how do we deploy it?? 👇👇
 
 ## Module 5 - GitHub Actions Review Slides
@@ -490,7 +492,9 @@ Pre-requisites:
              az webapp deployment slot swap -g ${{ inputs.resource_group_name }} -n ${{ inputs.app_service_name }} --slot ${{ inputs.app_service_slot_name }} --target-slot production --verbose
    ```
 
-1. When you commit and push this code with both the action and the pipeline, your Action will trigger immediately. Go to the Actions tab in GitHub and follow its progress from Dev all the way to Production
+1. Go to GitHub under `Actions` and hit Accept to run workflows on your Forked Repository
+
+1. Commit and push! When you commit and push this code with both the action and the pipeline, your Action will trigger immediately. Go to the Actions tab in GitHub and follow its progress from Dev all the way to Production
 
 1. Go to your Dev App Service Plan and note that the SKU is an S1. Let's change that to an S2 and commit and push that.
 
