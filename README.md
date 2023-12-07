@@ -20,12 +20,10 @@ Pre-requisites:
 1. Git
 1. GitHub Account
 1. Tell Scott the following:
-
-- Email you will use for Azure
-- GitHub account
-- GitHub repo name
-  - Should be the same as this one: workshop-dotnet-azure-github-bicep
-
+   - Email you will use for Azure
+   - GitHub account
+   - GitHub repo name
+     - Should be the same as this one: workshop-dotnet-azure-github-bicep
 1. Recommended to use VS Code with the [Bicep extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep) for editing Bicep
 1. Fork this repo
 
