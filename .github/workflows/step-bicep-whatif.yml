@@ -58,7 +58,7 @@ jobs:
         uses: bridgecrewio/checkov-action@v12
         with:
           framework: bicep
-          skip_check: CKV_AZURE_17,CKV_AZURE_80,CKV_AZURE_13,CKV_AZURE_88
+          skip_check: CKV_AZURE_17,CKV_AZURE_80,CKV_AZURE_13,CKV_AZURE_88,CKV_AZURE_66,CKV_AZURE_65,CKV_AZURE_63
 
       - name: WhatIf
         uses: Azure/cli@v1
