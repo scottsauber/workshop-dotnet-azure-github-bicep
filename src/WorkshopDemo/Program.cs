@@ -28,4 +28,3 @@ app.MapHealthChecks("/api/healthz");
 app.MapControllers();
 
 app.Run();
-

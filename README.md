@@ -24,6 +24,7 @@ Pre-requisites:
    - GitHub account
    - GitHub repo name
      - Should be the same as this one: workshop-dotnet-azure-github-bicep
+1. You will receive two emails, one from Azure to accept being part of the Azure Tenant and another from Scott with some values for you to use later
 1. Recommended to use VS Code with the [Bicep extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep) for editing Bicep
 1. Fork this repo
 
