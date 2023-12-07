@@ -52,7 +52,7 @@ resource appSettings 'Microsoft.Web/sites/config@2022-09-01' = {
   }
 }
 
-resource appServiceSlotSlot 'Microsoft.Web/sites/slots@2022-09-01' = {
+resource appServiceSlot 'Microsoft.Web/sites/slots@2022-09-01' = {
   location: location
   parent: appService
   name: 'slot'
@@ -62,10 +62,10 @@ resource appServiceSlotSlot 'Microsoft.Web/sites/slots@2022-09-01' = {
   properties: appServiceProperties
 }
 
-resource appServiceSlotSlotSetting 'Microsoft.Web/sites/slots/config@2022-09-01' = {
+resource appServiceSlotSetting 'Microsoft.Web/sites/slots/config@2022-09-01' = {
   name: 'appsettings'
   kind: 'string'
-  parent: appServiceSlotSlot  
+  parent: appServiceSlot
   properties: {
     ASPNETCORE_ENVIRONMENT: environment
   }
