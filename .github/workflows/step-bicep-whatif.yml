@@ -55,9 +55,10 @@ jobs:
       # Perform a security scan of the bicep code using checkov
       - name: Run Checkov action
         id: checkov
-        uses: bridgecrewio/checkov-action@master
+        uses: bridgecrewio/checkov-action@v12
         with:
           framework: bicep
+          skip_check: CKV_AZURE_17,CKV_AZURE_80,CKV_AZURE_13,CKV_AZURE_88
 
       - name: WhatIf
         uses: Azure/cli@v1

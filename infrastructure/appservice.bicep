@@ -14,7 +14,10 @@ var appServiceProperties = {
     ftpsState: 'Disabled'
     minTlsVersion: '1.2'
     webSocketsEnabled: true
-    // healthCheckPath: '/api/healthz'
+    healthCheckPath: '/api/healthz'
+    requestTracingEnabled: true
+    detailedErrorLoggingEnabled: true
+    httpLoggingEnabled: true
   }
 }
 
