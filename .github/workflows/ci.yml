@@ -1,4 +1,4 @@
-name: Deploy Pipeline
+name: CI - Deploy App and Bicep
 
 on:
   push:

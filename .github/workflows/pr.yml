@@ -1,4 +1,4 @@
-name: "Bicep PR"
+name: PR - Bicep WhatIf
 
 on:
   pull_request:
