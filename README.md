@@ -257,7 +257,7 @@ Pre-requisites:
 
 1. Awesome! We now have a reusable Module that also enforces our naming standards that follow the [Azure Guidelines](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations#compute-and-web) with the `asp-` prefix for App Service plans and `app-` for App Services.
 
-1. Now we need to pass some values to those parameters. So let's create a `main.bicep` file
+1. Now we need to pass some values to those parameters. So let's create a `main.bicep` file under the `infrastructure` folder
 
 1. Provide a `targetScope` of 'resourceGroup' for the `main.bicep` module
 
