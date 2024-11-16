@@ -2,7 +2,7 @@
 using NSubstitute;
 using WorkshopDemo.Core.Common;
 
-namespace WorkshopDemo.Tests.Common;
+namespace WorkshopDemo.Core.Tests.Common;
 
 public class VersionServiceTests
 {
