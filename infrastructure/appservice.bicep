@@ -8,7 +8,7 @@ var appServiceProperties = {
     httpsOnly: true
     siteConfig: {
       http20Enabled: true
-      linuxFxVersion: 'DOTNETCORE|8.0'
+      linuxFxVersion: 'DOTNETCORE|9.0'
       alwaysOn: true
       ftpsState: 'Disabled'
       minTlsVersion: '1.2'
@@ -24,7 +24,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: 'asp-${appName}-${environment}'
   location: location
   sku: {
-    name: 'S1'
+    name: 'P0V3'
   }
   kind: 'linux'
   properties: {
