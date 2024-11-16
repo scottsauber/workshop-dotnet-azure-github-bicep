@@ -11,12 +11,14 @@ This workshop will highlight the following:
 - WhatIf on PRs for Infrastructure Changes
 - Follows [Azure Naming Standards](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations#compute-and-web) for naming resources
 - Version Endpoint so you know what's deployed
+- Azure Application Insights
+- Azure Key Vault
 
 ## Workshop
 
 Pre-requisites:
 
-1. [.NET 8](https://dotnet.microsoft.com/en-us/download)
+1. [.NET 9](https://dotnet.microsoft.com/en-us/download)
 1. Git
 1. GitHub Account
 1. Tell Scott the following:
