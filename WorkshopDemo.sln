@@ -1,5 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35506.116 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkshopDemo", "src\WorkshopDemo\WorkshopDemo.csproj", "{7DB4D7CA-71F6-4859-8C77-4C4F8E3A9490}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkshopDemo.Core.Tests", "src\WorkshopDemo.Core.Tests\WorkshopDemo.Core.Tests.csproj", "{5AC17687-D9F2-4132-9E03-740EBFEE759F}"
@@ -24,5 +27,8 @@ Global
 		{49F64794-EC73-4D3F-8449-A36C9FB7B11D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49F64794-EC73-4D3F-8449-A36C9FB7B11D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49F64794-EC73-4D3F-8449-A36C9FB7B11D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

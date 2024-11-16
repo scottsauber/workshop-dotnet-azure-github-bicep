@@ -499,6 +499,10 @@ Pre-requisites:
 
 1. Commit and push! When you commit and push this code with both the action and the pipeline, your Action will trigger immediately. Go to the Actions tab in GitHub and follow its progress from Dev all the way to Production
 
+    > Note if you get an error like: The client '<xxx>' with object id '<xxx>' does not have authorization to perform action 'Microsoft.Resources/deployments/validate/action' over scope '/subscriptions/***/resourcegroups/rg-workshop-dnazghbicep-<yourghusername>-dev/providers/Microsoft.Resources/deployments/dev-deployment-37' or the scope is invalid. If access was recently granted, please refresh your credentials.
+
+    > This means you need to give your GitHub username and email to Scott, because he needs to do some magic to auth you to the pipeline.
+
 1. Go to your Dev App Service Plan and note that the SKU is an S1. Let's change that to an S2 and commit and push that.
 
 1. Go to your `WeatherForecastController` and get rid of all the `summaries` except `Freezing`. Then commit and push and watch it deploy.
