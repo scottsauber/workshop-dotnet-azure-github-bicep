@@ -86,6 +86,20 @@ Pre-requisites:
 
 ## Module 4 - Bicep Hands On
 
+1. If you're on Visual Studio, consider switching to Folder View so you can see both the /infrastructure folder and the /.github folder
+    1. In Solution Explorer click on the "switch between solutions and available views" button
+
+        ![Toggle Folder View](./docs/images/toggle-solution-folder-view.jpg)
+
+    1. Double click on "Folder View"
+    
+       ![Double Click Folder View](./docs/images/double-click-folder-view.jpg)
+
+    1. This is what your solution view should now look like
+    
+       ![Double Click Folder View](./docs/images/folder-view-final-state.jpg)    
+        
+    
 1. Delete your `.github` folder and your `infrastructure` folder and commit and push that code. This history is here for reference in case you get stuck.
 1. Create a new folder called `infrastructure`
 1. Create a `appservice.bicep` file
@@ -326,7 +340,7 @@ Pre-requisites:
 
 ## Module 5 - GitHub Actions Review Slides
 
-## Module 6 - GitHub Actions Review Slides
+## Module 6 - GitHub Actions Hands On
 
 1. If it doesn't already exist, create a folder called `.github` and then `workflows` under that folder.
 1. Create 6 new secrets based on the email you received at the beginning of this workshop. These secrets will be used to authenticate to Azure. If this wasn't in place, you wouldn't be able to talk to your Azure account, because Azure doesn't just let anyone in.
@@ -510,3 +524,9 @@ Pre-requisites:
 1. Go to your Dev App Service Slot /api/WeatherForecast URL and note that it is still changing the summaries. Whereas the main App Service /api/WeatherForecast URL is ha
 
 1. Take note of the /api/version endpoint and then correlate that back to the Git SHA back in GitHub. Note how in `ci.yml` we are setting that version and putting it in `version.txt` file that gets read by the application.
+
+## Module 7 - Azure Key Vault Review Slides
+
+## Module 8 - Azure Key Vault Hands On
+
+1. 
