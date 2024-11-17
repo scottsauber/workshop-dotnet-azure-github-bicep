@@ -2,7 +2,8 @@
 param environment string
 
 var location = 'centralus'
-var appNameWithEnvironment = 'workshop-dnazghbicep-scottsauber-${environment}'
+var myName = 'scottsauber'
+var appNameWithEnvironment = 'workshop-dnazghbicep-${myName}-${environment}'
 
 targetScope = 'resourceGroup'
 
@@ -21,6 +22,6 @@ module keyvault './keyvault.bicep' = {
     appId: appService.outputs.appServiceInfo.appId
     slotId: appService.outputs.appServiceInfo.slotId
     location: location
-    appName: appNameWithEnvironment
+    appName: '${myName}-${environment}' // key vault has 24 char max so just doing your name, usually would do appname-env but that'll conflict for everyone
   }
 }
