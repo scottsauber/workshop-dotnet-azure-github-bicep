@@ -8,7 +8,7 @@
       "launchUrl": "api/WeatherForecast",
       "applicationUrl": "https://localhost:7101",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "dev"
       }
     }
   }

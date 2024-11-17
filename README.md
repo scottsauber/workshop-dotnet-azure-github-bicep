@@ -87,19 +87,19 @@ Pre-requisites:
 ## Module 4 - Bicep Hands On
 
 1. If you're on Visual Studio, consider switching to Folder View so you can see both the /infrastructure folder and the /.github folder
-    1. In Solution Explorer click on the "switch between solutions and available views" button
 
-        ![Toggle Folder View](./docs/images/toggle-solution-folder-view.jpg)
+   1. In Solution Explorer click on the "switch between solutions and available views" button
 
-    1. Double click on "Folder View"
-    
-       ![Double Click Folder View](./docs/images/double-click-folder-view.jpg)
+      ![Toggle Folder View](./docs/images/toggle-solution-folder-view.jpg)
 
-    1. This is what your solution view should now look like
-    
-       ![Double Click Folder View](./docs/images/folder-view-final-state.jpg)    
-        
-    
+   1. Double click on "Folder View"
+
+      ![Double Click Folder View](./docs/images/double-click-folder-view.jpg)
+
+   1. This is what your solution view should now look like
+
+      ![Double Click Folder View](./docs/images/folder-view-final-state.jpg)
+
 1. Delete your `.github` folder and your `infrastructure` folder and commit and push that code. This history is here for reference in case you get stuck.
 1. Create a new folder called `infrastructure`
 1. Create a `appservice.bicep` file
@@ -212,7 +212,7 @@ Pre-requisites:
     // replace centralus with location everywhere
    ```
 
-1. If you look closely for duplication you'll see we have "dev" repeated a lot, let's parameterize that too, because we'll want to swap that out for the word "prod" later. Also restrict the values to only allow 'dev' and 'prod'
+1. If you look closely for duplication you'll see we have "dev" repeated a lot, let's parameterize that too, because we'll want to swap that out for the word "prod" later. Also restrict the values to only allow 'dev' and 'prod'.
 
    ```bicep
      @allowed(['dev', 'prod'])
@@ -228,13 +228,13 @@ Pre-requisites:
 
     // down in the appServicePlan replace the name so it looks like this:
     resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
-      name: 'asp-${appName}-${environment}'
+      name: 'asp-${appName}'
       // the rest
     }
 
     // down in the appService replace the name so it looks like this:
     resource appService 'Microsoft.Web/sites@2022-09-01' = {
-      name: 'app-${appName}-${environment}'
+      name: 'app-${appName}'
       // the rest
     }
    ```
@@ -285,7 +285,7 @@ Pre-requisites:
 1. Now reference the `appservice.bicep` module you just created and pass the parameters to it
 
    ```bicep
-    module app './appservice.bicep' = {
+    module appService './appservice.bicep' = {
       name: 'appservice'
       params: {
         appName: 'workshop-dnazghbicep-'YOURUSERNAMEHERE''
@@ -305,7 +305,7 @@ Pre-requisites:
 
     targetScope = 'resourceGroup'
 
-    module app './appservice.bicep' = {
+    module appService './appservice.bicep' = {
       name: 'appservice'
       params: {
         appName: 'workshop-dnazghbicep-'YOURUSERNAMEHERE''
@@ -513,9 +513,9 @@ Pre-requisites:
 
 1. Commit and push! When you commit and push this code with both the action and the pipeline, your Action will trigger immediately. Go to the Actions tab in GitHub and follow its progress from Dev all the way to Production
 
-    > Note if you get an error like: The client '<xxx>' with object id '<xxx>' does not have authorization to perform action 'Microsoft.Resources/deployments/validate/action' over scope '/subscriptions/***/resourcegroups/rg-workshop-dnazghbicep-<yourghusername>-dev/providers/Microsoft.Resources/deployments/dev-deployment-37' or the scope is invalid. If access was recently granted, please refresh your credentials.
+   > Note if you get an error like: The client '<xxx>' with object id '<xxx>' does not have authorization to perform action 'Microsoft.Resources/deployments/validate/action' over scope '/subscriptions/\*\*\*/resourcegroups/rg-workshop-dnazghbicep-<yourghusername>-dev/providers/Microsoft.Resources/deployments/dev-deployment-37' or the scope is invalid. If access was recently granted, please refresh your credentials.
 
-    > This means you need to give your GitHub username and email to Scott, because he needs to do some magic to auth you to the pipeline.
+   > This means you need to give your GitHub username and email to Scott, because he needs to do some magic to auth you to the pipeline.
 
 1. Go to your Dev App Service Plan and note that the SKU is an S1. Let's change that to an S2 and commit and push that.
 
@@ -529,4 +529,210 @@ Pre-requisites:
 
 ## Module 8 - Azure Key Vault Hands On
 
-1. 
+1. Normally you would install the `Azure.Extensions.AspNetCore.Configuration.Secrets` and `Azure.Identity` packages into your project but this has already been done for you.
+
+1. Go to the `Program.cs` file in the `WorkshopDemo` project
+
+1. Add the using `using Azure.Identity;` to the top of the file
+
+1. Add the following code:
+
+   ```csharp
+       builder.Configuration.AddAzureKeyVault(
+           new Uri($"https://kv-{yourName}-{builder.Environment.EnvironmentName}.vault.azure.net/"),
+           new DefaultAzureCredential());
+   ```
+
+1. Note: the above code will not compile, replace `{yourName}` with your actual name. So for me (Scott Sauber) it might look like:
+
+   ```csharp
+       builder.Configuration.AddAzureKeyVault(
+           new Uri($"https://kv-scottsauber-{builder.Environment.EnvironmentName}.vault.azure.net/"),
+           new DefaultAzureCredential());
+   ```
+
+1. Run your application
+
+1. It will fail, because the Key Vault doesn't exist in Bicep yet.
+
+1. Add the following Bicep in a `keyvault.bicep` file in the `infrastructure` folder. Note - replace the "PUTYOURUSEROBJECTIDFROMYOUREMAILHERE" with the Azure User's Object ID listed in the bottom of the email you received.
+
+   ```bicep
+       param appId string
+       param slotId string
+       param location string
+       param appName string
+
+       resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
+         name: 'kv-${appName}'
+         location: location
+         properties: {
+           tenantId: subscription().tenantId
+           sku: {
+             family: 'A'
+             name: 'standard'
+           }
+           accessPolicies: [
+             // AppService
+             {
+               tenantId: subscription().tenantId
+               objectId: appId
+               permissions: {
+                 keys: [
+                   'get'
+                   'list'
+                   'unwrapKey'
+                   'wrapKey'
+                 ]
+                 secrets: [
+                   'get'
+                   'list'
+                 ]
+                 certificates: []
+               }
+             }
+             // AppService Slot
+             {
+               tenantId: subscription().tenantId
+               objectId: slotId
+               permissions: {
+                 keys: [
+                   'get'
+                   'list'
+                   'unwrapKey'
+                   'wrapKey'
+                 ]
+                 secrets: [
+                   'get'
+                   'list'
+                 ]
+                 certificates: []
+               }
+             }
+             // Myself - normally you wouldn't put a user here, you'd use a Group all the developers are in
+             {
+               tenantId: subscription().tenantId
+               objectId: PUTYOURUSEROBJECTIDFROMYOUREMAILHERE
+               permissions: {
+                   keys: [
+                       'get'
+                       'list'
+                       'update'
+                       'create'
+                       'import'
+                       'delete'
+                       'recover'
+                       'backup'
+                       'restore'
+                       'decrypt'
+                       'encrypt'
+                       'unwrapKey'
+                       'wrapKey'
+                       'verify'
+                       'sign'
+                       'purge'
+                   ]
+                   secrets: [
+                       'get'
+                       'list'
+                       'set'
+                       'delete'
+                       'recover'
+                       'backup'
+                       'restore'
+                       'purge'
+                   ]
+                   certificates: [
+                       'get'
+                       'list'
+                       'update'
+                       'create'
+                       'import'
+                       'delete'
+                       'recover'
+                       'backup'
+                       'restore'
+                       'manageContacts'
+                       'manageIssuers'
+                       'getIssuers'
+                       'listIssuers'
+                       'setIssuers'
+                       'deleteIssuers'
+                       'purge'
+                   ]
+               }
+             }
+           ]
+         }
+       }
+
+       output keyVaultName string = keyVault.name
+
+   ```
+
+1. We pass in the App ID and Slot ID. These reference the App Service Object ID and the App Service Slot Object ID. This allows the App Service and the Slot to talk to this Key Vault. But how do we get those Object IDs? Those are randomly generated when it creates the App Service. We basically need to pass data from the App Service module to the Key Vault module. Outputs to the rescue!
+
+1. In the `appservice.bicep` file add the following at the bottom. Outputs are kind of like `return` statements in C#
+
+   ```bicep
+       output appServiceInfo object = {
+         appId: appService.identity.principalId
+         slotId: appServiceSlot.identity.principalId
+       }
+   ```
+
+1. In your `main.bicep` file, add the following code to wire up the Key Vault module to your deployment.
+
+   ```bicep
+       module keyvault './keyvault.bicep' = {
+         name: 'keyvault'
+         params: {
+           appId: appService.outputs.appServiceInfo.appId
+           slotId: appService.outputs.appServiceInfo.slotId
+           location: location
+           appName: '${myName}-${environment}' // key vault has 24 char max so just doing your name, usually would do appname-env but that'll conflict for everyone
+         }
+       }
+   ```
+
+1. Note that the `appService` reference is referencing the `module` above and then you can access the `outputs`. Again, outputs are kind of like a `return` statement.
+
+1. Also note - there's a refactor done here with `myName`, that is a variable that references your GitHub name. Look at your result and check where else could that be used? Spoiler: check the next step
+
+1. The final `main.bicep` should look like this
+
+   ```bicep
+       @allowed(['dev', 'prod'])
+       param environment string
+
+       var location = 'centralus'
+       var myName = 'scottsauber'
+       var appNameWithEnvironment = 'workshop-dnazghbicep-${myName}-${environment}'
+
+       targetScope = 'resourceGroup'
+
+       module appService './appservice.bicep' = {
+         name: 'appservice'
+         params: {
+           appName: appNameWithEnvironment
+           environment: environment
+           location: location
+         }
+       }
+
+       module keyvault './keyvault.bicep' = {
+         name: 'keyvault'
+         params: {
+           appId: appService.outputs.appServiceInfo.appId
+           slotId: appService.outputs.appServiceInfo.slotId
+           location: location
+           appName: '${myName}-${environment}' // key vault has 24 char max so just doing your name, usually would do appname-env but that'll conflict for everyone
+         }
+       }
+   ```
+
+1. Commit and push
+
+1. Go to your Resource Group in Azure and watch the Key Vault get added as your GitHub Action runs.
+
+1. After your Key Vault is created, run your app again and watch
