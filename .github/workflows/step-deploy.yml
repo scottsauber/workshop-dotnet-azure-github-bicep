@@ -31,7 +31,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to Azure App Service
+    name: Deploy to Azure
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
