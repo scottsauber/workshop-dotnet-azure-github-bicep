@@ -26,7 +26,7 @@ module keyvault './keyvault.bicep' = {
   }
 }
 
-module montior './monitor.bicep' = {
+module monitor './monitor.bicep' = {
   name: 'monitor'
   params: {
     appName: appNameWithEnvironment
