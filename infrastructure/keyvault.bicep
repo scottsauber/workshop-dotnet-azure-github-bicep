@@ -52,7 +52,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
       // Myself - normally you wouldn't put a user here, you'd use a Group all the developers are in
       {
         tenantId: subscription().tenantId
-        objectId: '592b2d32-c9bb-43bc-b53a-65447634d112'
+        objectId: '25c16810-3e79-460d-89dd-7e22ac610aca'
         permissions: {
             keys: [
                 'get'
