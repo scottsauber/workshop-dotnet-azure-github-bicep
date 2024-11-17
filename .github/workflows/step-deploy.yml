@@ -33,6 +33,11 @@ jobs:
   deploy:
     name: Deploy to Azure
     runs-on: ubuntu-latest
+
+    concurrency:
+      group: deploy-to-azure
+      cancel-in-progress: false
+
     steps:
       - uses: actions/checkout@v3
 
