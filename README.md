@@ -525,9 +525,33 @@ Pre-requisites:
 
 1. Take note of the /api/version endpoint and then correlate that back to the Git SHA back in GitHub. Note how in `ci.yml` we are setting that version and putting it in `version.txt` file that gets read by the application.
 
-## Module 7 - Azure Key Vault Review Slides
+## Module 7 - Health Check Slides
 
-## Module 8 - Azure Key Vault Hands On
+## Module 8 - Health Check Hands On
+
+1. Open the `WorkshopDemoHealthCheck` under the `WorkshopDemo` project and `/HealthChecks`. Take note that this is just returning that the app is healthy. While this may not seem super useful, it actually is much better than nothing. This ensures that the application booted and didn't crash while trying to execute `Program.cs`.
+
+1. Open your `appservice.bicep` file under the `infrastructure` folder and find the `healthCheckPath`. You'll see that it's wired up to a `/api/healthz` endpoint. This is configured in `Program.cs` via `app.MapHealthChecks("/api/healthz")`.
+
+1. Now that we know how it all works together, let's make this health check fail and see how Azure App Service responds.
+
+1. Change the `WorkshopDemoHealthCheck` from `return Task.FromResult(HealthCheckResult.Healthy("A healthy result."));` to `return Task.FromResult(HealthCheckResult.Unhealthy("A failure occurred."));` to simulate the app being unhealthy.
+
+1. Commit and push this change and then go to your App Service in the Portal and see what happens
+
+1. What should happen is it will succeed to deploy, but it will say your app is unhealthy and warn you it will replace the instance after an hour of unhealthy checks. If you had multiple instances and one reported unhealthy and the other was healthy, it'd route to the healthy one automagically.
+
+   ![App Service Unhealthy](./docs/images/healthcheck-app-unhealthy.jpg)
+
+1. Then after clicking on that "Click here" you will see this:
+
+   ![Unhealthy details](./docs/images/healthcheck-details.jpg)
+
+1. Revert your change back to returning a `Healthy` result and commit and push that change.
+
+## Module 9 - Azure Key Vault Review Slides
+
+## Module 10 - Azure Key Vault Hands On
 
 1. Normally you would install the `Azure.Extensions.AspNetCore.Configuration.Secrets` and `Azure.Identity` packages into your project but this has already been done for you.
 
@@ -735,4 +759,44 @@ Pre-requisites:
 
 1. Go to your Resource Group in Azure and watch the Key Vault get added as your GitHub Action runs.
 
-1. After your Key Vault is created, run your app again and watch
+1. After your Key Vault is created, run your app again and it will succeed.
+
+1. Add a Secret to your Azure Key Vault. Go to your Key Vault, then Secrets, then click "Generate/Import". For Upload Options select Manual, Name call it "SomeSecret," give it a value of your choice, make sure activation date is unchecked, expiration date is unchecked, Enabled is On, and no tags. It should look like this:
+
+   ![Add Key Vault Secret](./docs/images/keyvault-add-secret.jpg)
+
+1. Click Create
+
+1. Now that we have a Secret in Key Vault, let's read from it in your app.
+
+1. After your `AddAzureKeyVault` call in Program.cs... let's write out the secret to the command line. Obviously normally you wouldn't do this, but this is just to illustrate that the value is there.
+
+   ```csharp
+     Console.WriteLine($"My secret value is: {builder.Configuration.GetValue<string>("SomeSecret")}");
+   ```
+
+1. Now run your app. View the terminal that is launched and view your secret value. Feel free to change it and restart your application to see the new value applied.
+
+   > Note - by default `AddAzureKeyVault` does NOT hot reload your secrets when they change. You will have to restart your application in order to see this. Azure App Service has a "Restart" functionality in the portal on the Overview tab, or re-deploy would cause a restart as well. This is usually fine for most scenarios, but if you have a situation where your secrets are changing very often - you can configure Azure Key Vault to poll by using an overload on `AddAzureKeyVault` to pass in a `AzureKeyVaultConfigurationOptions` with a `ReloadInterval` property set, but do note this means you will get charged much more often.
+
+1. Our secret assumes it's at the root of Configuration, but sometimes you want to nest secrets together at a different Parent/Child relationship. A common scenario for this is connection strings. By default ASP.NET Core encourages your connection strings to look something like this in our `appsettings.json` file:
+
+   ```json
+   {
+     "ConnectionStrings": {
+       "MyApplication": "ConnectionStringValueHere"
+     }
+   }
+   ```
+
+1. But how do we do that in Azure Key Vault when our Secrets are just key value pairs and not objects? The answer is using a delimiter of `--`.
+
+1. Create a new Key Vault secret called `ConnectionStrings--MyApplication` and add some random value in there and save it. Then go back to your `Program.cs` after your `.AddAzureKeyVault` call and add the following:
+
+   ```csharp
+    Console.WriteLine($"My connection string value is: {builder.Configuration.GetConnectionString("MyApplication")}");
+   ```
+
+1. Re-run your application and note your value shows up.
+
+## Module 11 - Application Insights
