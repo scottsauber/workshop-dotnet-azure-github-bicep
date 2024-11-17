@@ -1,13 +1,26 @@
 @allowed(['dev', 'prod'])
 param environment string
 
+var location = 'centralus'
+var appNameWithEnvironment = 'workshop-dnazghbicep-scottsauber-${environment}'
+
 targetScope = 'resourceGroup'
 
-module app './appservice.bicep' = {
+module appService './appservice.bicep' = {
   name: 'appservice'
   params: {
-    appName: 'workshop-dnazghbicep-scottsauber'
+    appName: appNameWithEnvironment
     environment: environment
-    location: 'centralus'
+    location: location
+  }
+}
+
+module keyvault './keyvault.bicep' = {
+  name: 'keyvault'
+  params: {
+    appId: appService.outputs.appServiceInfo.appId
+    slotId: appService.outputs.appServiceInfo.slotId
+    location: location
+    appName: appNameWithEnvironment
   }
 }

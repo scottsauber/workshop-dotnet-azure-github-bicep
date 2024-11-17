@@ -21,7 +21,7 @@ var appServiceProperties = {
 }
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
-  name: 'asp-${appName}-${environment}'
+  name: 'asp-${appName}'
   location: location
   sku: {
     name: 'P0V3'
@@ -33,7 +33,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
 }
 
 resource appService 'Microsoft.Web/sites@2022-09-01' = {
-  name: 'app-${appName}-${environment}'
+  name: 'app-${appName}'
   location: location
   identity: {
   type: 'SystemAssigned'
@@ -67,4 +67,9 @@ resource appServiceSlotSetting 'Microsoft.Web/sites/slots/config@2022-09-01' = {
   properties: {
     ASPNETCORE_ENVIRONMENT: environment
   }
+}
+
+output appServiceInfo object = {
+  appId: appService.identity.principalId
+  slotId: appServiceSlot.identity.principalId
 }
