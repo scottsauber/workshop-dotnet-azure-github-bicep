@@ -4,11 +4,12 @@ namespace WorkshopDemo.WeatherForecast;
 
 [ApiController]
 [Route("api/WeatherForecast")]
-public class WeatherForecastController
+public class WeatherForecastController(ILogger<WeatherForecastController> logger)
 {
     [HttpGet]
     public IEnumerable<WeatherForecast> Get()
     {
+        logger.LogInformation("Get WeatherForecast called");
         var summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -31,6 +32,7 @@ public class WeatherForecastController
         var randomWaitInMs = Random.Shared.Next(500, 5000);
         await Task.Delay(randomWaitInMs);
 
+        logger.LogInformation("Get Slow WeatherForecast called with wait of {wait}", randomWaitInMs);
         var summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
