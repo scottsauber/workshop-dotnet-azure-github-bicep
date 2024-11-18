@@ -8,7 +8,6 @@ This workshop will highlight the following:
 - Zero Downtime Deployments
 - Infrastructure managed by code using Bicep
 - Automated builds and deploys
-- WhatIf on PRs for Infrastructure Changes
 - Follows [Azure Naming Standards](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations#compute-and-web) for naming resources
 - Version Endpoint so you know what's deployed
 - Azure Application Insights
@@ -19,8 +18,9 @@ This workshop will highlight the following:
 Pre-requisites:
 
 1. [.NET 9](https://dotnet.microsoft.com/en-us/download)
-1. Git
+1. Git Knowledge
 1. GitHub Account
+1. [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
 1. Tell Scott the following:
    - Email you will use for Azure
    - GitHub account
@@ -579,6 +579,10 @@ Pre-requisites:
            new Uri($"https://kv-scottsauber-{builder.Environment.EnvironmentName}.vault.azure.net/"),
            new DefaultAzureCredential());
    ```
+
+1. Next you will need to do an `az login` using the Azure CLI to login to Azure. Otherwise you'll get a massive error when you try to run the app that starts with below:
+
+   > Unhandled exception. Azure.Identity.CredentialUnavailableException: DefaultAzureCredential failed to retrieve a token from the included credentials.
 
 1. Run your application
 
