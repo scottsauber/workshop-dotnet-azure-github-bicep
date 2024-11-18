@@ -103,11 +103,11 @@ Pre-requisites:
 1. Delete your `.github` folder and your `infrastructure` folder and commit and push that code. This history is here for reference in case you get stuck.
 1. Create a new folder called `infrastructure`
 1. Create a `appservice.bicep` file
-1. Create a Linux App Service Plan resource
+1. Create a Linux App Service Plan resource. Note: replace the <PUTYOURUSERNAMEHERE> so it should be like `name: 'asp-workshop-dnazghbicep-scottsauber-dev'`
 
    ```bicep
       resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
-         name: 'asp-dnazghbicep-'PUTYOURUSERNAMEHERE'-dev'
+         name: 'asp-workshop-dnazghbicep-<PUTYOURUSERNAMEHERE>-dev'
          location: 'centralus'
          sku: {
            name: 'S1'
@@ -119,11 +119,11 @@ Pre-requisites:
        }
    ```
 
-1. Next create an App Service resource, by referencing the App Service Plan's ID (note replace the ???? with the reference's ID)
+1. Next create an App Service resource, by referencing the App Service Plan's ID (note replace the ???? with the reference's ID). Note: replace the <PUTYOURUSERNAMEHERE>
 
    ```bicep
     resource appService 'Microsoft.Web/sites@2022-09-01' = {
-       name: 'app-dnazghbicep-'PUTYOURUSERNAMEHERE'-dev'
+       name: 'app-workshop-dnazghbicep-<PUTYOURUSERNAMEHERE>-dev'
        location: 'centralus'
        identity: {
         type: 'SystemAssigned'
@@ -133,7 +133,7 @@ Pre-requisites:
           httpsOnly: true
           siteConfig: {
             http20Enabled: true
-            linuxFxVersion: 'DOTNETCORE|8.0'
+            linuxFxVersion: 'DOTNETCORE|9.0'
             alwaysOn: true
             ftpsState: 'Disabled'
             minTlsVersion: '1.2'
@@ -147,13 +147,13 @@ Pre-requisites:
     }
    ```
 
-1. Add the environment variables for the app service, by referencing the app service object itself (note replace the ???? with the reference)
+1. Add the environment variables for the app service, by referencing the `appService` object itself (note replace the ???? with the reference)
 
    ```bicep
        resource appSettings 'Microsoft.Web/sites/config@2022-09-01' = {
          name: 'appsettings'
          kind: 'string'
-         parent: appService
+         parent: ????
          properties: {
              ASPNETCORE_ENVIRONMENT: 'dev'
          }
@@ -175,7 +175,7 @@ Pre-requisites:
              httpsOnly: true
              siteConfig: {
                 http20Enabled: true
-                linuxFxVersion: 'DOTNETCORE|8.0'
+                linuxFxVersion: 'DOTNETCORE|9.0'
                 alwaysOn: true
                 ftpsState: 'Disabled'
                 minTlsVersion: '1.2'
@@ -189,7 +189,7 @@ Pre-requisites:
       }
    ```
 
-1. Add the environment variables for the app service slot, by referencing the app service object itself (note replace the ???? with the reference)
+1. Add the environment variables for the app service slot, by referencing the appServiceSlot itself.
 
    ```bicep
     resource appServiceSlotSetting 'Microsoft.Web/sites/slots/config@2022-09-01' = {
@@ -210,15 +210,6 @@ Pre-requisites:
     param location string
 
     // replace centralus with location everywhere
-   ```
-
-1. If you look closely for duplication you'll see we have "dev" repeated a lot, let's parameterize that too, because we'll want to swap that out for the word "prod" later. Also restrict the values to only allow 'dev' and 'prod'.
-
-   ```bicep
-     @allowed(['dev', 'prod'])
-     param environment string
-
-     // replace dev with environment everywhere. Note: ${variableName} is how you do concatenation
    ```
 
 1. If you look closely for more duplication, you'll see we have the app name repeated in both the appService and appServicePlan. Extract that out to a parameter
@@ -248,7 +239,7 @@ Pre-requisites:
           httpsOnly: true
           siteConfig: {
             http20Enabled: true
-            linuxFxVersion: 'DOTNETCORE|8.0'
+            linuxFxVersion: 'DOTNETCORE|9.0'
             alwaysOn: true
             ftpsState: 'Disabled'
             minTlsVersion: '1.2'
@@ -288,8 +279,7 @@ Pre-requisites:
     module appService './appservice.bicep' = {
       name: 'appservice'
       params: {
-        appName: 'workshop-dnazghbicep-'YOURUSERNAMEHERE''
-        environment: ???
+        appName: 'workshop-dnazghbicep-<YOURUSERNAMEHERE>-${environment}'
         location: 'centralus'
       }
     }
@@ -297,7 +287,7 @@ Pre-requisites:
 
 1. Crap - where does the environment come from? I want to pass that in dynamically depending on dev or prod. Enter `.bicepparam` files (these will be passed in dynamically via the CLI)
 
-1. Add a parameter for environment and only allow `'dev'` and `'prod'` as values then reference that environment below in the `app` module
+1. Add a parameter for environment and only allow `'dev'` and `'prod'` as values then reference that when we call the `appService` module
 
    ```bicep
     @allowed(['dev', 'prod'])
@@ -308,12 +298,10 @@ Pre-requisites:
     module appService './appservice.bicep' = {
       name: 'appservice'
       params: {
-        appName: 'workshop-dnazghbicep-'YOURUSERNAMEHERE''
-        environment: environment
+        appName: 'workshop-dnazghbicep-<YOURUSERNAMEHERE>-${environment}'
         location: 'centralus'
       }
     }
-
    ```
 
 1. Under the `infrastructure` folder, create a folder called `environments`.
@@ -522,13 +510,15 @@ Pre-requisites:
 
    > This means you need to give your GitHub username and email to Scott, because he needs to do some magic to auth you to the pipeline.
 
-1. Go to your Dev App Service Plan and note that the SKU is an S1. Let's change that to an S2 and commit and push that.
+1. Go to your Dev App Service Plan and note that the SKU is an S1. Let's change that to a P0V3 and commit and push that. Standard SKU is largely deprecated
 
 1. Go to your `WeatherForecastController` and get rid of all the `summaries` except `Freezing`. Then commit and push and watch it deploy.
 
 1. Go to your Dev App Service Slot /api/WeatherForecast URL and note that it is still changing the summaries. Whereas the main App Service /api/WeatherForecast URL is ha
 
 1. Take note of the /api/version endpoint and then correlate that back to the Git SHA back in GitHub. Note how in `ci.yml` we are setting that version and putting it in `version.txt` file that gets read by the application.
+
+   > Alternatively we could use `SourceRevisionId` on the publish as well.
 
 ## Module 7 - Health Check Slides
 
