@@ -39,10 +39,10 @@ jobs:
       cancel-in-progress: false
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Log in to Azure
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           client-id: ${{ secrets.azure_client_id }}
           tenant-id: ${{ secrets.azure_tenant_id }}
@@ -57,7 +57,7 @@ jobs:
             --resource-group ${{ inputs.resource_group_name }} \
             --verbose
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.artifact_name }}
           path: publish
