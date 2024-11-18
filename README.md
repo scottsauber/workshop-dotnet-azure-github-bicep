@@ -10,7 +10,7 @@ This workshop will highlight the following:
 - Automated builds and deploys
 - Follows [Azure Naming Standards](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations#compute-and-web) for naming resources
 - Version Endpoint so you know what's deployed
-- Azure Application Insights
+- Azure Application Insights and Log Analytics
 - Azure Key Vault
 
 ## Workshop
