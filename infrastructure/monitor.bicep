@@ -28,11 +28,3 @@ resource aiSecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
     value: applicationInsights.properties.ConnectionString
   }
 }
-
-resource logAnalyticsSecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
-  name: 'ConnectionStrings--LogAnalytics'
-  parent: keyVault
-  properties: {
-    value: logWs.listKeys().primarySharedKey
-  }
-}
