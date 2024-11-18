@@ -1,3 +1,3 @@
 using '../main.bicep'
 
-param environment = 'prod'
+param environment =  'prod'
