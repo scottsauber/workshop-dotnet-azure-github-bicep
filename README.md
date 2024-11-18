@@ -743,7 +743,6 @@ Pre-requisites:
          name: 'appservice'
          params: {
            appName: appNameWithEnvironment
-           environment: environment
            location: location
          }
        }
