@@ -464,8 +464,13 @@ Pre-requisites:
 
    jobs:
      deploy:
-       name: Deploy to Azure App Service
+       name: Deploy to Azure
        runs-on: ubuntu-latest
+
+       concurrency:
+         group: deploy-to-azure
+         cancel-in-progress: false
+
        steps:
          - uses: actions/checkout@v3
 
@@ -799,4 +804,202 @@ Pre-requisites:
 
 1. Re-run your application and note your value shows up.
 
-## Module 11 - Application Insights
+## Module 11 - Log Analytics Slides
+
+## Module 12 - Application Insights Slides
+
+## Module 13 - Application Insights Hands On
+
+1. Create a `monitor.bicep` file in your `/infrastructure` folder.
+
+1. Add the following Bicep to that `monitor.bicep` file:
+
+   ```bicep
+       param location string
+       param appName string
+       param keyVaultName string
+
+       resource logWs 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
+         name: 'law-${appName}'
+         location: location
+       }
+
+       resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
+         name: 'ai-${appName}'
+         location: location
+         kind: 'web'
+         properties: {
+           Application_Type: 'web'
+           WorkspaceResourceId: logWs.id
+         }
+       }
+
+       resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+         name: keyVaultName
+       }
+
+       resource aiSecret 'Microsoft.KeyVault/vaults/secrets@2023-02-01' = {
+         name: 'ConnectionStrings--ApplicationInsights'
+         parent: keyVault
+         properties: {
+           value: applicationInsights.properties.ConnectionString
+         }
+       }
+   ```
+
+1. This will setup both the Azure Log Analytics Workspace, as well as Application Insights. As well as add a Secrets for Application Insights into your Key Vault. That way you don't have to add it later for each environment.
+
+1. Add to your `main.bicep` to wire up the `monitor` module.
+
+   ```bicep
+       module monitor './monitor.bicep' = {
+         name: 'monitor'
+         params: {
+           appName: appNameWithEnvironment
+           keyVaultName: keyvault.outputs.keyVaultName
+           location: location
+         }
+       }
+   ```
+
+1. Commit and push that and now let's wire up our .NET code to this
+
+1. Normally you'd install the following packages, but they've already been installed for you:
+
+   1. Microsoft.ApplicationInsights
+   1. Microsoft.ApplicationInsights.AspNetCore
+   1. Serilog
+   1. Serilog.AspNetCore
+   1. Serilog.Sinks.ApplicationInsights
+
+1. Add the following code to your `Program.cs` to enable Application Insights (note: this will not pull telemetry until you deploy)
+
+   ```csharp
+       builder.Services.AddApplicationInsightsTelemetry(options =>
+       {
+           options.ConnectionString = builder.Configuration.GetConnectionString("ApplicationInsights");
+       });
+   ```
+
+1. Add the following code to your `Program.cs` to enable Log Analytics via Application Insights (AI is built on LA).
+
+   ```csharp
+       var builder = WebApplication.CreateBuilder(args);
+
+       Log.Logger = new LoggerConfiguration()
+           .MinimumLevel.Debug()
+           .Enrich.FromLogContext()
+           .WriteTo.Console()
+           .CreateBootstrapLogger();
+   ```
+
+1. This sets up the Serilog Bootstrap Logger in case something goes wrong prior to Logging being configured. Next wrap the rest of your code in a `try/catch/finally` and inside the `try` add the following:
+
+   ```csharp
+               try
+       {
+           Log.Information("Starting web host");
+
+           // Add services to the container.
+           builder.Host.UseSerilog((ctx, lc) => lc
+               .MinimumLevel.Information()
+               .MinimumLevel.Override("WorkshopDemo", LogEventLevel.Debug)
+               .MinimumLevel.Override("System", LogEventLevel.Error)
+               .WriteTo.Console(
+                   outputTemplate:
+                   "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}",
+                   theme: AnsiConsoleTheme.Literate)
+               .WriteTo.ApplicationInsights(
+                   new TelemetryConfiguration
+                       { ConnectionString = ctx.Configuration.GetConnectionString("ApplicationInsights") },
+                   TelemetryConverter.Traces)
+               .Enrich.FromLogContext());
+
+            // Other registrations...
+            // ...
+
+            builder.Services.AddApplicationInsightsTelemetry(options =>
+            {
+                options.ConnectionString = builder.Configuration.GetConnectionString("ApplicationInsights");
+            });
+       }
+       catch (Exception ex)
+       {
+           Log.Fatal(ex, "Application terminated");
+       }
+       finally
+       {
+           Log.CloseAndFlush();
+       }
+   ```
+
+1. If you would like, you could add an `app.UseSerilogRequestLogging` right after `var app = builder.Build()`. This will log out to Log Analytics useful info like the URL and how long it took for each request.
+
+1. The final output should look something like this below
+
+   ```csharp
+        try
+        {
+            Log.Information("Starting web host");
+
+            // Add services to the container.
+            builder.Host.UseSerilog((ctx, lc) => lc
+                .MinimumLevel.Information()
+                .MinimumLevel.Override("WorkshopDemo", LogEventLevel.Debug)
+                .MinimumLevel.Override("System", LogEventLevel.Error)
+                .WriteTo.Console(
+                    outputTemplate:
+                    "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}",
+                    theme: AnsiConsoleTheme.Literate)
+                .WriteTo.ApplicationInsights(
+                    new TelemetryConfiguration
+                        { ConnectionString = ctx.Configuration.GetConnectionString("ApplicationInsights") },
+                    TelemetryConverter.Traces)
+                .Enrich.FromLogContext());
+
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddOpenApi();
+            builder.Services.AddControllers();
+            builder.Services.AddHealthChecks()
+                .AddCheck<WorkshopDemoHealthCheck>(nameof(WorkshopDemoHealthCheck));
+            builder.Services.AddSingleton<IFileService, FileService>();
+            builder.Services.AddSingleton<IVersionService, VersionService>();
+
+            builder.Configuration.AddAzureKeyVault(
+                new Uri($"https://kv-{YOURNAMEHERE}-{builder.Environment.EnvironmentName}.vault.azure.net/"),
+                new ChainedTokenCredential(new AzureCliCredential(), new ManagedIdentityCredential()));
+
+            builder.Services.AddApplicationInsightsTelemetry(options =>
+            {
+                options.ConnectionString = builder.Configuration.GetConnectionString("ApplicationInsights");
+            });
+
+            var app = builder.Build();
+
+            app.UseSerilogRequestLogging();
+
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.MapOpenApi();
+            }
+
+            app.UseHttpsRedirection();
+
+            app.MapHealthChecks("/api/healthz");
+
+            app.MapControllers();
+
+            app.Run();
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Application terminated");
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
+   ```
+
+1. Commit and push and then trigger some requests on your App Service to the /api/weatherforecast and /api/weatherforecast/slow and look at the logs and the app insights information.
