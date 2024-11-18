@@ -365,7 +365,12 @@ Pre-requisites:
 
        steps:
          - name: Checkout repo
-           uses: actions/checkout@v1
+           uses: actions/checkout@v4
+
+         - name: Setup dotnet
+           uses: actions/setup-dotnet@v4
+           with:
+             dotnet-version: 9.0.x
 
          - name: Run dotnet test
            run: |
@@ -379,7 +384,7 @@ Pre-requisites:
            run: echo $(date +'%Y%m%d.%H%M').${{github.run_number}}-$(git rev-parse --short HEAD) > publish/version.txt
 
          - name: Upload artifact
-           uses: actions/upload-artifact@v3
+           uses: actions/upload-artifact@v4
            with:
              name: dotnet-artifact
              path: publish/
@@ -460,10 +465,10 @@ Pre-requisites:
          cancel-in-progress: false
 
        steps:
-         - uses: actions/checkout@v3
+         - uses: actions/checkout@v4
 
          - name: Log in to Azure
-           uses: azure/login@v1
+           uses: azure/login@v2
            with:
              client-id: ${{ secrets.azure_client_id }}
              tenant-id: ${{ secrets.azure_tenant_id }}
@@ -478,7 +483,7 @@ Pre-requisites:
                --resource-group ${{ inputs.resource_group_name }} \
                --verbose
 
-         - uses: actions/download-artifact@v3
+         - uses: actions/download-artifact@v4
            with:
              name: ${{ inputs.artifact_name }}
              path: publish
@@ -514,7 +519,7 @@ Pre-requisites:
 
 1. Go to your `WeatherForecastController` and get rid of all the `summaries` except `Freezing`. Then commit and push and watch it deploy.
 
-1. Go to your Dev App Service Slot /api/WeatherForecast URL and note that it is still changing the summaries. Whereas the main App Service /api/WeatherForecast URL is ha
+1. After it deploys. Go to your Dev App Service Slot /api/WeatherForecast URL and note that it is still changing the summaries. Whereas the main App Service /api/WeatherForecast URL is not
 
 1. Take note of the /api/version endpoint and then correlate that back to the Git SHA back in GitHub. Note how in `ci.yml` we are setting that version and putting it in `version.txt` file that gets read by the application.
 
@@ -720,7 +725,7 @@ Pre-requisites:
 
 1. Note that the `appService` reference is referencing the `module` above and then you can access the `outputs`. Again, outputs are kind of like a `return` statement.
 
-1. Also note - there's a refactor done here with `myName`, that is a variable that references your GitHub name. Look at your result and check where else could that be used? Spoiler: check the next step
+1. Also note - there's a refactor done here with `myName` as well as `appNameWithEnvironment`, that is a variable that references your GitHub name. Look at your result and check where else could that be used? Spoiler: check the next step
 
 1. The final `main.bicep` should look like this
 
