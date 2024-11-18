@@ -36,7 +36,7 @@ jobs:
         run: echo $(date +'%Y%m%d.%H%M').${{github.run_number}}-$(git rev-parse --short HEAD) > publish/version.txt
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dotnet-artifact
           path: publish/
