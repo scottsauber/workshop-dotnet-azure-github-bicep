@@ -17,6 +17,10 @@ builder.Services.AddHealthChecks()
 builder.Services.AddSingleton<IFileService, FileService>();
 builder.Services.AddSingleton<IVersionService, VersionService>();
 
+builder.Configuration.AddAzureKeyVault(
+    new Uri($"https://kv-scottsauber-{builder.Environment.EnvironmentName}.vault.azure.net/"),
+    new DefaultAzureCredential());
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
