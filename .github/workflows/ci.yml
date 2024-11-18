@@ -19,6 +19,11 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 9.0.x
+
       - name: Run dotnet test
         run: |
           dotnet test -c Release
