@@ -17,7 +17,7 @@ This workshop will highlight the following:
 
 Pre-requisites:
 
-1. [.NET 9](https://dotnet.microsoft.com/en-us/download)
+1. [.NET 10](https://dotnet.microsoft.com/en-us/download)
 1. Git Knowledge
 1. GitHub Account
 1. [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
@@ -133,7 +133,7 @@ Pre-requisites:
           httpsOnly: true
           siteConfig: {
             http20Enabled: true
-            linuxFxVersion: 'DOTNETCORE|9.0'
+            linuxFxVersion: 'DOTNETCORE|10.0'
             alwaysOn: true
             ftpsState: 'Disabled'
             minTlsVersion: '1.2'
@@ -175,7 +175,7 @@ Pre-requisites:
              httpsOnly: true
              siteConfig: {
                 http20Enabled: true
-                linuxFxVersion: 'DOTNETCORE|9.0'
+                linuxFxVersion: 'DOTNETCORE|10.0'
                 alwaysOn: true
                 ftpsState: 'Disabled'
                 minTlsVersion: '1.2'
@@ -239,7 +239,7 @@ Pre-requisites:
           httpsOnly: true
           siteConfig: {
             http20Enabled: true
-            linuxFxVersion: 'DOTNETCORE|9.0'
+            linuxFxVersion: 'DOTNETCORE|10.0'
             alwaysOn: true
             ftpsState: 'Disabled'
             minTlsVersion: '1.2'
@@ -370,7 +370,7 @@ Pre-requisites:
          - name: Setup dotnet
            uses: actions/setup-dotnet@v4
            with:
-             dotnet-version: 9.0.x
+             dotnet-version: 10.0.x
 
          - name: Run dotnet test
            run: |

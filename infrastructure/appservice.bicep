@@ -8,7 +8,7 @@ var appServiceProperties = {
   httpsOnly: true
   siteConfig: {
     http20Enabled: true
-    linuxFxVersion: 'DOTNETCORE|9.0'
+    linuxFxVersion: 'DOTNETCORE|10.0'
     alwaysOn: true
     ftpsState: 'Disabled'
     minTlsVersion: '1.2'
