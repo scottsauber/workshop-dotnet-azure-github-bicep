@@ -461,7 +461,7 @@ Pre-requisites:
        runs-on: ubuntu-latest
 
        concurrency:
-         group: deploy-to-azure
+         group: deploy-to-azure-${{ inputs.env }}
          cancel-in-progress: false
 
        steps:
