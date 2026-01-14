@@ -110,7 +110,7 @@ Pre-requisites:
          name: 'asp-workshop-dnazghbicep-<PUTYOURUSERNAMEHERE>-dev'
          location: 'centralus'
          sku: {
-           name: 'S1'
+           name: 'P0V3'
          }
          kind: 'linux'
          properties: {
@@ -515,7 +515,7 @@ Pre-requisites:
 
    > This means you need to give your GitHub username and email to Scott, because he needs to do some magic to auth you to the pipeline.
 
-1. Go to your Dev App Service Plan and note that the SKU is an S1. Let's change that to a P0V3 and commit and push that. Standard SKU is largely deprecated
+1. Go to your Dev App Service Plan and note that the SKU is an P0V3. Let's change that to a P1V3 and commit and push that.
 
 1. Go to your `WeatherForecastController` and get rid of all the `summaries` except `Freezing`. Then commit and push and watch it deploy.
 
